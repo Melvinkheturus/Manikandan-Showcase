@@ -1,0 +1,130 @@
+/* Spline 3D Model Styling */
+spline-viewer {
+  width: 100% !important;
+  height: 100% !important;
+  background: transparent !important;
+  pointer-events: none !important; /* Prevent interactions */
+  display: block !important;
+  z-index: 10;
+  touch-action: none !important; /* Disable touch behaviors */
+  user-select: none !important;
+  overflow: hidden !important;
+  position: static !important;
+}
+
+/* Style for our custom 3D model class */
+.spline-3d-model {
+  width: 100% !important;
+  height: 100% !important;
+  background: transparent !important;
+  pointer-events: none !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  display: block !important;
+  margin: 0 auto !important;
+  position: static !important;
+  touch-action: none !important;
+  overflow: hidden !important;
+}
+
+/* Override any shadow DOM styles */
+spline-viewer::part(canvas) {
+  background: transparent !important;
+  opacity: 1 !important;
+  pointer-events: none !important;
+  touch-action: none !important;
+  overflow: hidden !important;
+  position: static !important;
+}
+
+/* Attempt to override Spline's internal canvas */
+spline-viewer canvas {
+  pointer-events: none !important;
+  touch-action: none !important;
+  overflow: hidden !important;
+  position: static !important;
+}
+
+.spline-container {
+  position: relative;
+  background: transparent;
+  z-index: 2;
+  pointer-events: none; /* Prevent interactions */
+  touch-action: none;
+  user-select: none;
+  overflow: hidden !important; /* Prevent scrolling within the container */
+  /* Fixed dimensions set in the component */
+}
+
+/* Wrapper for the 3D model */
+.spline-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden !important;
+  position: relative;
+}
+
+/* Force the spline container to be visible */
+#welcome .spline-container {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .spline-container {
+    width: 800px !important;
+    height: 600px !important;
+  }
+  
+  /* Stack layout for mobile */
+  #welcome .container {
+    flex-direction: column;
+  }
+  
+  /* Center content on mobile */
+  #welcome .text-content {
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+  
+  /* Smaller 3D model on very small screens */
+  @media (max-width: 480px) {
+    .spline-container {
+      width: 600px !important;
+      height: 400px !important;
+    }
+  }
+}
+
+/* Control the vertical space in welcome section */
+#welcome {
+  padding-top: calc(60px + 1rem); /* Adjust based on navbar height + desired spacing */
+}
+
+/* On larger screens, ensure proper vertical alignment */
+@media (min-width: 768px) {
+  #welcome {
+    min-height: 85vh; /* Slightly reduce overall section height */
+    display: flex;
+    align-items: center;
+  }
+
+  #welcome .container {
+    margin-top: -2rem; /* Pull content up a bit */
+  }
+}
+
+/* Hide the Spline watermark */
+.spline-container spline-viewer::part(watermark) {
+  display: none !important;
+}
+
+spline-viewer::part(watermark) {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+} 
