@@ -1,0 +1,118 @@
+/* Glow Effects for Portfolio - Blade Runner Inspired Theme */
+
+/* Section Headings with Purple Color */
+.heading-glow {
+  color: #b093ea;
+  text-shadow: none;
+}
+
+/* Purple Gradient Heading (for 'experience') */
+.gradient-heading {
+  font-size: 4rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, #b084f9 0%, #8e6fff 50%, #7a5fff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text; 
+  text-fill-color: transparent;
+  text-shadow: 0 0 8px rgba(162, 89, 255, 0.3);
+}
+
+/* CTA Button Glow */
+.cta-button {
+  background: #a259ff;
+  color: #fff;
+  border-radius: 8px;
+  padding: 12px 24px;
+  transition: 0.3s ease;
+}
+
+.cta-button:hover {
+  box-shadow: 0 0 15px #a259ff, 0 0 30px rgba(162, 89, 255, 0.47);
+  transform: translateY(-2px);
+}
+
+/* Neon Divider */
+.neon-divider {
+  height: 2px;
+  background: #a259ff;
+  box-shadow: 0 0 10px rgba(162, 89, 255, 0.4);
+  margin: 40px 0;
+}
+
+/* Radial Glow for Avatar/Profile Image */
+.avatar-glow {
+  position: absolute;
+  width: 250px;
+  height: 250px;
+  background: radial-gradient(circle, #a259ff 0%, transparent 70%);
+  filter: blur(50px);
+  z-index: -1;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0.4;
+}
+
+/* Nav Hover Glow */
+.nav-link:hover {
+  color: #a259ff;
+  text-shadow: 0 0 8px rgba(162, 89, 255, 0.67);
+}
+
+/* Section Title Gradient */
+.section-title-gradient {
+  color: #b093ea;
+  background: none;
+  -webkit-background-clip: initial;
+  background-clip: initial;
+  display: inline-block;
+}
+
+/* Subtle Glow for Cards */
+.card-glow:hover {
+  box-shadow: 0 0 15px rgba(162, 89, 255, 0.3);
+}
+
+/* Button Outline Glow */
+.btn-outline-glow {
+  border: 1px solid #a259ff;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-glow:hover {
+  border-color: #a259ff;
+  box-shadow: 0 0 10px rgba(162, 89, 255, 0.4), inset 0 0 10px rgba(162, 89, 255, 0.2);
+}
+
+/* Text Hover Glow Effect */
+.text-glow-hover:hover {
+  color: #a259ff;
+  text-shadow: 0 0 5px rgba(162, 89, 255, 0.4);
+}
+
+/* Enhanced Section Headers */
+.enhanced-header {
+  position: relative;
+  z-index: 1;
+}
+
+.enhanced-header::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -5px;
+  height: 2px;
+  width: 40px;
+  background: linear-gradient(to right, #a259ff, transparent);
+  z-index: -1;
+}
+
+/* Experience Timeline Dot Glow */
+.timeline-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #a259ff;
+  box-shadow: 0 0 8px rgba(162, 89, 255, 0.6);
+} 

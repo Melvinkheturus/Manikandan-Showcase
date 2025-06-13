@@ -9,17 +9,17 @@ export default {
     extend: {
       colors: {
         primary: {
-          DEFAULT: '#00FF7F', // Emerald Green
-          50: '#EAFFF6',
-          100: '#D5FFEC',
-          200: '#ACFFD9',
-          300: '#82FFC6',
-          400: '#59FFB4',
-          500: '#2FFA9F',
-          600: '#00FF7F',
-          700: '#00D66A',
-          800: '#00AD55',
-          900: '#008441',
+          DEFAULT: '#a259ff', // Neon Purple (was Emerald Green)
+          50: '#f5eeff',
+          100: '#ebe0ff',
+          200: '#d6c0ff',
+          300: '#c2a0ff',
+          400: '#b380ff',
+          500: '#a259ff', // Main accent color
+          600: '#9047e0',
+          700: '#7e36c2',
+          800: '#6c26a3',
+          900: '#5a1785',
         },
         background: {
           DEFAULT: '#0A0A0A', // Dark Background
@@ -36,18 +36,27 @@ export default {
         },
       },
       backgroundImage: {
-        'emerald-veil': 'radial-gradient(circle at 50% 50%, rgba(16,185,129,0.3) 0%, rgba(0,0,0,0.9) 80%, #000000 100%)',
-        'emerald-deep': 'linear-gradient(135deg, #0f0f0f 0%, #121212 40%, #0b3d31 75%, #0e2c22 100%)',
-        'midnight-green': 'linear-gradient(to bottom right, rgba(10,10,10,1) 0%, rgba(16,185,129,0.3) 40%, rgba(16,185,129,0.6) 60%, rgba(0,0,0,1) 100%)',
-        'emerald-fade': 'linear-gradient(to bottom, rgba(16,185,129,0.2) 0%, rgba(0,0,0,0) 100%)',
-        'emerald-glow': 'radial-gradient(circle at 50% 40%, rgba(16,185,129,0.4) 0%, rgba(0,0,0,0) 60%)',
+        'purple-veil': 'radial-gradient(circle at 50% 50%, rgba(162,89,255,0.3) 0%, rgba(0,0,0,0.9) 80%, #000000 100%)',
+        'purple-deep': 'linear-gradient(135deg, #0f0f0f 0%, #121212 40%, #2a1245 75%, #1a0b33 100%)',
+        'midnight-purple': 'linear-gradient(to bottom right, rgba(10,10,10,1) 0%, rgba(162,89,255,0.3) 40%, rgba(162,89,255,0.6) 60%, rgba(0,0,0,1) 100%)',
+        'purple-fade': 'linear-gradient(to bottom, rgba(162,89,255,0.2) 0%, rgba(0,0,0,0) 100%)',
+        'purple-glow': 'radial-gradient(circle at 50% 40%, rgba(162,89,255,0.4) 0%, rgba(0,0,0,0) 60%)',
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],
+        handwriting: ['Caveat', 'cursive'],
       },
       animation: {
         'spin-slow': 'spin 3s linear infinite',
         'bounce-slow': 'bounce 2s infinite',
+        'pulse-slow': 'pulse 3s infinite',
+        shimmer: 'shimmer 2s infinite linear',
+      },
+      keyframes: {
+        shimmer: {
+          '0%': { transform: 'translateX(-100%)' },
+          '100%': { transform: 'translateX(100%)' }
+        },
       },
       backdropBlur: {
         xs: '2px',
@@ -55,4 +64,7 @@ export default {
     },
   },
   plugins: [],
+  future: {
+    hoverOnlyWhenSupported: true,
+  },
 } 

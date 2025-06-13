@@ -1,0 +1,13 @@
+{
+  "name": "portfolio-database-setup",
+  "version": "1.0.0",
+  "description": "Database setup for Manikandan's portfolio CMS",
+  "main": "setup.js",
+  "scripts": {
+    "setup": "node setup.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.7",
+    "dotenv": "^16.4.5"
+  }
+} 

@@ -1,0 +1,88 @@
+/* Project-specific styles */
+
+/* Hide scrollbar but allow scrolling */
+.hide-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+/* Snap scrolling */
+.snap-y {
+  scroll-snap-type: y mandatory;
+}
+
+.snap-center {
+  scroll-snap-align: center;
+}
+
+/* Glow effects */
+.shadow-glow {
+  box-shadow: 0 0 15px 2px var(--color-primary);
+}
+
+/* Terminal cursor blinking animation */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.cursor-blink {
+  animation: blink 1s step-end infinite;
+}
+
+/* Glitch animation */
+@keyframes glitch {
+  0% {
+    transform: translate(0);
+  }
+  20% {
+    transform: translate(-2px, 2px);
+  }
+  40% {
+    transform: translate(-2px, -2px);
+  }
+  60% {
+    transform: translate(2px, 2px);
+  }
+  80% {
+    transform: translate(2px, -2px);
+  }
+  100% {
+    transform: translate(0);
+  }
+}
+
+.glitch-effect {
+  position: relative;
+  animation: glitch 100ms infinite;
+  animation-timing-function: steps(2, end);
+  animation-play-state: paused;
+}
+
+.glitch-effect:hover {
+  animation-play-state: running;
+}
+
+/* Line effect */
+.line-effect {
+  position: relative;
+}
+
+.line-effect::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: var(--color-primary);
+  transition: width 0.3s ease;
+}
+
+.line-effect:hover::after {
+  width: 100%;
+} 

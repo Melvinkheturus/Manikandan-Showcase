@@ -1,0 +1,326 @@
+/* ProjectsHorizontalScroll.css */
+
+.projects-trigger {
+  padding: 2rem 1rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.projects-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3rem;
+  padding: 0 1rem;
+}
+
+.projects-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+}
+
+.view-all-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #10b981;
+  text-decoration: none;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.view-all-link:hover {
+  color: #059669;
+  transform: translateX(3px);
+}
+
+.view-all-link svg {
+  transition: transform 0.3s ease;
+}
+
+.view-all-link:hover svg {
+  transform: translateX(3px);
+}
+
+.projects-section {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.projects-container {
+  display: flex;
+  padding: 1rem;
+  gap: 2.5rem;
+  will-change: transform;
+  height: calc(100% - 6rem);
+  padding-bottom: 4rem;
+}
+
+/* Updated card styles to match the reference image */
+.project-card {
+  flex: 0 0 auto;
+  width: min(80vw, 400px);
+  border-radius: 1.5rem;
+  overflow: hidden;
+  background-color: rgba(17, 24, 39, 0.5);
+  backdrop-filter: blur(8px);
+  box-shadow: 
+    0 10px 20px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(255, 255, 255, 0.07);
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: center;
+  position: relative;
+}
+
+.project-card.active {
+  transform: scale(1.05);
+  box-shadow: 
+    0 20px 25px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.project-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 
+    0 15px 30px rgba(0, 0, 0, 0.25),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.project-card.active:hover {
+  transform: scale(1.05) translateY(-5px);
+}
+
+.project-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  height: 100%;
+}
+
+.project-image-container {
+  position: relative;
+  overflow: hidden;
+  height: 280px;
+  border-radius: 1.5rem 1.5rem 0 0;
+}
+
+.project-image-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.4) 100%);
+  z-index: 1;
+}
+
+.project-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+  filter: brightness(0.95);
+}
+
+.project-card:hover .project-image {
+  transform: scale(1.05);
+}
+
+.project-categories {
+  position: absolute;
+  top: 1.25rem;
+  left: 1.25rem;
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  z-index: 2;
+}
+
+.project-category {
+  padding: 0.35rem 0.85rem;
+  background-color: rgba(255, 255, 255, 0.95);
+  color: #111827;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 2rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.project-title {
+  padding: 1.5rem 1.25rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+}
+
+.card-arrow {
+  position: absolute;
+  bottom: 1.25rem;
+  right: 1.25rem;
+  width: 38px;
+  height: 38px;
+  background-color: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.3s ease;
+  z-index: 2;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.card-arrow svg {
+  color: #111827;
+  width: 18px;
+  height: 18px;
+}
+
+.project-card:hover .card-arrow {
+  background-color: #10b981;
+}
+
+.project-card:hover .card-arrow svg {
+  color: #ffffff;
+}
+
+.navigation-controls {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 1rem;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.navigation-controls.visible {
+  opacity: 1;
+}
+
+.nav-button {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(4px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.nav-button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.nav-button svg {
+  width: 24px;
+  height: 24px;
+  color: #ffffff;
+}
+
+.nav-button.disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .projects-title {
+    font-size: 2rem;
+  }
+  
+  .project-card {
+    width: 85vw;
+  }
+  
+  .project-image-container {
+    height: 220px;
+  }
+}
+
+/* Zoom animation for the initial featured card */
+@keyframes cardZoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Intro spotlight effect */
+.project-card:first-child::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at center, rgba(16, 185, 129, 0.2) 0%, transparent 70%);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1;
+  transition: opacity 1s ease;
+}
+
+.project-card:first-child.active::before {
+  opacity: 1;
+}
+
+/* Progress indicator dots */
+.scroll-indicator {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.75rem;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  z-index: 20;
+}
+
+.scroll-indicator.visible {
+  opacity: 1;
+}
+
+.indicator-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.3);
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  outline: none;
+}
+
+.indicator-dot:hover {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.indicator-dot.active {
+  background-color: #10b981;
+  transform: scale(1.4);
+  box-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
+} 

@@ -1,35 +1,83 @@
 import React, { useEffect, useState, lazy, Suspense, useCallback } from 'react';
 import { useTheme } from './context/ThemeContext';
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
-import WelcomeLoader from './components/WelcomeLoader';
-import WelcomeToHeroSound from './components/WelcomeToHeroSound';
-import { Routes, Route, useLocation } from 'react-router-dom';
-import { initSmoothScrolling } from './utils/smoothScroll';
-import './styles/spline.css';
+import SmoothScrollProvider from './portfolio/components/providers/SmoothScrollProvider';
+import Navbar from './portfolio/components/layout/Navbar';
+import PreloaderPage from './portfolio/pages/PreloaderPage';
+import WelcomeToHeroSound from './portfolio/components/audio/WelcomeToHeroSound';
+import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import './styles/smoothScroll.css';
+import FooterContactSection from './sections/FooterContactSection';
+
+// Register GSAP plugins to ensure they're available
+gsap.registerPlugin(ScrollTrigger);
 
 // Lazy load components that aren't needed immediately
-const ParallaxBackground = lazy(() => import('./components/ParallaxBackground'));
-const CustomCursor = lazy(() => import('./components/CustomCursor'));
-const ScrollProgress = lazy(() => import('./components/ScrollProgress'));
+const CustomCursor = lazy(() => import('./portfolio/components/ui/CustomCursor'));
 
-// Lazy load pages for code splitting
-const Home = lazy(() => import('./pages/Home'));
-const About = lazy(() => import('./pages/About'));
-const Projects = lazy(() => import('./pages/Projects'));
-const Contact = lazy(() => import('./pages/Contact'));
+// Import PageRouter for main site navigation and ProjectDetail page
+const PageRouter = lazy(() => import('./portfolio/components/layout/PageRouter'));
+const ProjectDetail = lazy(() => import('./portfolio/pages/ProjectDetail'));
+
+// Admin Pages
+import AdminLayout from './admin/components/AdminLayout';
+import CMSDashboard from './admin/pages/CMSDashboard';
+import CMSLogin from './admin/pages/auth/CMSLogin';
+import CMSProjects from './admin/pages/CMSProjects';
+import CMSSettings from './admin/pages/CMSSettings';
+import CMSProfile from './admin/pages/CMSProfile';
+import PageSections from './admin/pages/PageSections';
 
 // Simple fallback components for lazy-loaded UI elements
-const BackgroundFallback = () => <div className="fixed inset-0 -z-10 bg-gradient-to-br from-gray-900 to-black"></div>;
 const SimpleFallback = () => <div className="hidden"></div>;
 const PageFallback = () => <div className="flex-grow min-h-screen"></div>;
+
+// Determine if user is authenticated (simplified)
+const isAuthenticated = () => {
+  // In a real app, check for session token or auth state
+  return true; // For demo purposes
+};
+
+// Protected route component
+const ProtectedRoute = ({ children }) => {
+  if (!isAuthenticated()) {
+    return <Navigate to="/admin/login" replace />;
+  }
+  return children;
+};
 
 function App() {
   const [loading, setLoading] = useState(true);
   const [transitioningToHero, setTransitioningToHero] = useState(false);
-  const [splineLoaded, setSplineLoaded] = useState(false);
   const { isDarkMode } = useTheme();
   const location = useLocation();
+
+  // Check if we're on the projects page
+  const isProjectsPage = location.pathname === '/projects';
+  
+  // Check if preloader should be skipped
+  const searchParams = new URLSearchParams(location.search);
+  const skipPreloader = searchParams.get('nopreloader') === 'true';
+  
+  // Skip preloader if URL parameter is present
+  useEffect(() => {
+    if (skipPreloader) {
+      setLoading(false);
+    }
+  }, [skipPreloader]);
+
+  // Register ScrollTrigger with Lenis scroll updates
+  useEffect(() => {
+    // On route changes, refresh ScrollTrigger to handle any new animations
+    ScrollTrigger.refresh();
+    
+    // Return cleanup function
+    return () => {
+      // Clear any ScrollTrigger instances when component unmounts
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+    };
+  }, [location.pathname]);
 
   // More reliable overflow handling
   const enableScroll = useCallback(() => {
@@ -62,126 +110,105 @@ function App() {
   useEffect(() => {
     const safetyTimer = setTimeout(() => {
       if (loading) {
-        console.log("Safety timeout: forcing scroll restoration");
         enableScroll();
         setLoading(false);
       }
-    }, 15000); // 15 seconds max loading time
+    }, 10000); // Reduced timeout to 10 seconds
     
     return () => clearTimeout(safetyTimer);
   }, [loading, enableScroll]);
 
-  // Simulate loading time or actual data fetching
-  useEffect(() => {
-    // This will be handled by the useProgress hook in the WelcomeLoader
-    // Keep the timer as a fallback
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 8000);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  // Scroll to top on route change
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [location.pathname]);
-
-  // Initialize smooth scrolling
-  useEffect(() => {
-    initSmoothScrolling();
-  }, []);
-
-  // Preload Spline script
-  useEffect(() => {
-    // Check if the script already exists
-    if (!document.querySelector('script[src*="@splinetool/viewer"]')) {
-      const script = document.createElement('script');
-      script.type = 'module';
-      script.src = 'https://unpkg.com/@splinetool/viewer@1.9.94/build/spline-viewer.js';
-      script.async = true;
-      script.onload = () => {
-        console.log('Spline script loaded in App');
-        setSplineLoaded(true);
-      };
-      script.onerror = (e) => {
-        console.error('Failed to load Spline script in App', e);
-      };
-      document.head.appendChild(script);
-    } else {
-      setSplineLoaded(true);
-    }
-  }, []);
-
   const handleLoadingComplete = useCallback(() => {
-    // Start the transition to hero
     setTransitioningToHero(true);
   }, []);
 
   const handleTransitionComplete = useCallback(() => {
-    // Transition sound has completed, finish loading
+    // Remove preloader completely and show hero section with dim-to-bright effect immediately
     setLoading(false);
     setTransitioningToHero(false);
   }, []);
 
-  // Dark gradient only
+  // Dark gradient with purple instead of emerald
   const darkGradient = `linear-gradient(
     135deg,
-    #0a0f0d 0%,
-    rgba(16,185,129,0.15) 30%,
-    rgba(16,185,129,0.05) 50%,
-    #0a0f0d 100%
+    #0a0a0a 0%,
+    rgba(162,89,255,0.15) 30%,
+    rgba(162,89,255,0.05) 50%,
+    #0a0a0a 100%
   )`;
 
-  return (
-    <div 
-      className="relative text-white min-h-screen flex flex-col"
-      style={{
-        background: darkGradient,
-        backgroundAttachment: 'fixed',
-      }}
-    >
-      {/* Welcome loader */}
-      {loading && <WelcomeLoader onFinish={handleLoadingComplete} />}
-      
-      {/* Welcome to Hero transition sound */}
-      <WelcomeToHeroSound 
-        isLoading={loading && !transitioningToHero} 
-        onTransitionComplete={handleTransitionComplete} 
-      />
-      
-      {/* 3D Parallax Background with fallback for lazy loading */}
-      <Suspense fallback={<BackgroundFallback />}>
-        <ParallaxBackground />
-      </Suspense>
-      
-      {/* Custom Cursor - only load after main content */}
-      <Suspense fallback={<SimpleFallback />}>
-        {!loading && <CustomCursor />}
-      </Suspense>
+  // Conditionally render content based on route
+  const isAdminRoute = location.pathname.startsWith('/admin');
+  const isProjectDetailRoute = location.pathname.startsWith('/project/');
 
-      {/* Scroll Progress Indicator - only load after main content */}
-      <Suspense fallback={<SimpleFallback />}>
-        {!loading && <ScrollProgress />}
-      </Suspense>
-      
-      {/* Only show navbar after loading is complete */}
-      {!loading && <Navbar />}
-      
-      <main className="flex-grow scroll-smooth">
-        <Suspense fallback={<PageFallback />}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/projects" element={<Projects />} />
-            <Route path="/contact" element={<Contact />} />
-          </Routes>
-        </Suspense>
-      </main>
-      
-      {/* Only show footer after loading is complete */}
-      {!loading && <Footer />}
-    </div>
+  return (
+    <SmoothScrollProvider>
+      <div 
+        className="relative text-white min-h-screen flex flex-col"
+        style={{
+          background: darkGradient,
+          backgroundAttachment: 'fixed',
+        }}
+      >
+        {isAdminRoute ? (
+          <main className="flex-grow">
+            <Routes>
+              <Route path="/admin/login" element={<CMSLogin />} />
+              <Route 
+                path="/admin" 
+                element={
+                  <ProtectedRoute>
+                    <AdminLayout />
+                  </ProtectedRoute>
+                }
+              >
+                <Route index element={<CMSDashboard />} />
+                <Route path="sections/*" element={<PageSections />} />
+                <Route path="projects" element={<CMSProjects />} />
+                <Route path="settings" element={<CMSSettings />} />
+                <Route path="profile" element={<CMSProfile />} />
+              </Route>
+            </Routes>
+          </main>
+        ) : (
+          <>
+            {/* Preloader - only shown if not skipped */}
+            {loading && !skipPreloader && <PreloaderPage onFinish={handleLoadingComplete} />}
+            
+            {/* Welcome to Hero transition sound - only if not skipped */}
+            {!skipPreloader && (
+              <WelcomeToHeroSound 
+                isLoading={loading && !transitioningToHero} 
+                onTransitionComplete={handleTransitionComplete} 
+              />
+            )}
+            
+            {/* Custom Cursor - only load after main content */}
+            <Suspense fallback={<SimpleFallback />}>
+              {!loading && <CustomCursor />}
+            </Suspense>
+            
+            {/* Only show navbar after loading is complete */}
+            {!loading && <Navbar />}
+            
+            <main className="flex-grow scroll-smooth">
+              <Suspense fallback={<PageFallback />}>
+                <Routes>
+                  {/* Main site using PageRouter component */}
+                  <Route path="/*" element={<PageRouter />} />
+                  
+                  {/* Project detail page */}
+                  <Route path="/project/:slug" element={<ProjectDetail />} />
+                </Routes>
+              </Suspense>
+            </main>
+            
+            {/* Only show FooterContactSection on project detail pages */}
+            {!loading && isProjectDetailRoute && <FooterContactSection />}
+          </>
+        )}
+      </div>
+    </SmoothScrollProvider>
   );
 }
 

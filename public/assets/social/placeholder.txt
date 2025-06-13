@@ -1,0 +1,17 @@
+Social Media Image Placeholders
+
+For the Social Glimpse Carousel to display correctly, please add your social media post images to this directory.
+You'll need the following files:
+
+1. instagram-post1.jpg - An Instagram post preview
+2. twitter-post1.jpg - A Twitter/X post preview
+3. youtube-post1.jpg - A YouTube video thumbnail
+4. behance-post1.jpg - A Behance project preview
+5. linkedin-post1.jpg - A LinkedIn post preview
+
+For best results:
+- Use images with aspect ratio close to 1:1 (square) or 4:5
+- Recommended size: at least 600x600px
+- Image should be visually appealing and relevant to the content described in the post
+
+If you don't have actual social media posts, you can use mockups or placeholder designs that represent the type of content you would post on each platform. 

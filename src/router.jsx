@@ -1,15 +1,15 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import App from './App';
-import Home from './pages/Home';
-import About from './pages/About';
-import Projects from './pages/Projects';
-import Contact from './pages/Contact';
-import AdminApp from './admin/AdminApp';
+import Home from './portfolio/pages/Home';
+import ProjectDetail from './portfolio/pages/ProjectDetail';
+import ProjectGallery from './portfolio/pages/ProjectGallery';
+import AdminApp from './admin/CMSHelper/AdminApp';
+import NotFound from './portfolio/pages/NotFound';
 
-// Create a router with multiple routes
+// Create a router with routes
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: '/*',
     element: <App />,
     children: [
       {
@@ -17,16 +17,16 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: 'about',
-        element: <About />,
+        path: 'projects/:slug',
+        element: <ProjectDetail />,
       },
       {
         path: 'projects',
-        element: <Projects />,
+        element: <ProjectGallery />,
       },
       {
-        path: 'contact',
-        element: <Contact />,
+        path: '*',
+        element: <NotFound />,
       },
     ],
   },
@@ -41,4 +41,4 @@ const Router = () => {
   return <RouterProvider router={router} />;
 };
 
-export default Router; 
+export default Router;

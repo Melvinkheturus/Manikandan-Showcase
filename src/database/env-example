@@ -1,0 +1,9 @@
+# Supabase configuration
+# Replace with your project values from the Supabase dashboard
+
+# Project URL and anon key (can be used from frontend)
+VITE_SUPABASE_URL=https://your-project-id.supabase.co
+VITE_SUPABASE_ANON_KEY=your-anon-key
+
+# Service role key (only for database setup, NEVER expose in frontend)
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key 

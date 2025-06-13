@@ -1,52 +1,55 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App.jsx';
+import Router from './router.jsx';
+import { ThemeProvider } from './context/ThemeContext.jsx';
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import './index.css';
-import { ThemeProvider } from './context/ThemeContext';
-import { BrowserRouter, createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { ParallaxProvider } from 'react-scroll-parallax';
+import './styles/smoothScroll.css';
+import './styles/fonts.css';
+import './styles/utilities.css';
+import './styles/scrollbar.css';
+import './styles/glow-effects.css';
 
-// Create a separate container for hydration
-const appRoot = document.getElementById('root');
+// Register GSAP plugins if needed
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 
-// Configure Router with future flags
-const router = createBrowserRouter(
-  [
-    {
-      path: "*",
-      element: (
-        <ThemeProvider>
-            <ParallaxProvider>
-              <App />
-            </ParallaxProvider>
-        </ThemeProvider>
-      ),
-    },
-  ],
-  {
-    future: {
-      v7_startTransition: true,
-      v7_relativeSplatPath: true,
-    },
-  }
-);
+gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
-// Use createRoot for improved React 18 features
-ReactDOM.createRoot(appRoot).render(
-  <RouterProvider router={router} />
+// Create root
+const root = ReactDOM.createRoot(document.getElementById('root'));
+
+// Render app
+root.render(
+  <React.StrictMode>
+      <ThemeProvider>
+      <Router />
+        <Analytics />
+        <SpeedInsights />
+      </ThemeProvider>
+  </React.StrictMode>
 );
 
 // Add performance monitoring in development
 if (import.meta.env.DEV) {
   // Import and start the performance monitoring
   import('web-vitals').then((vitals) => {
-    // Check if each function exists before calling it
-    if (vitals.getCLS) vitals.getCLS(console.log);
-    if (vitals.getFID) vitals.getFID(console.log);
-    if (vitals.getFCP) vitals.getFCP(console.log);
-    if (vitals.getLCP) vitals.getLCP(console.log);
-    if (vitals.getTTFB) vitals.getTTFB(console.log);
-  }).catch(err => {
-    console.warn('Failed to load web-vitals:', err);
+    const vitalsObj = {
+      getCLS: vitals.getCLS,
+      getFID: vitals.getFID,
+      getFCP: vitals.getFCP,
+      getLCP: vitals.getLCP,
+      getTTFB: vitals.getTTFB
+    };
+    
+    Object.keys(vitalsObj).forEach((key) => {
+      if (typeof vitalsObj[key] === 'function') {
+        vitalsObj[key](console.log);
+      }
+    });
+  }).catch(() => {
+    // Silently fail in production
   });
 }

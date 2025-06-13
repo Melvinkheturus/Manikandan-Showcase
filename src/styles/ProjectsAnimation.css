@@ -1,0 +1,90 @@
+/* ProjectsAnimation.css */
+
+/* Basic setup for smooth scrolling */
+html, body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+/* Project section styling */
+.project-section {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Project grid (initially scaled up) */
+.project-grid {
+  position: relative;
+  transform-origin: center center;
+  will-change: transform;
+}
+
+/* Individual project cards */
+.project-card {
+  position: absolute;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+  transition: transform 0.5s ease;
+}
+
+/* Center project always visible */
+.center-project {
+  opacity: 1 !important;
+}
+
+/* Other project cards initially hidden */
+.project-card:not(.center-project) {
+  opacity: 0;
+}
+
+/* Hover effect for project cards */
+.project-card:hover {
+  transform: scale(1.05);
+  z-index: 10;
+}
+
+/* Horizontal scroll section */
+.horizontal-section {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Container for the panels */
+.panels-container {
+  position: relative;
+  height: 100%;
+}
+
+/* Individual panel styling */
+.panel {
+  position: relative;
+  height: 100%;
+}
+
+/* Force hardware acceleration for smoother animations */
+.project-card, .project-grid, .panel {
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Images within panels */
+.panel img {
+  transition: transform 0.5s ease;
+}
+
+.panel:hover img {
+  transform: scale(1.05);
+}
+
+/* Fix Safari transitions */
+@supports (-webkit-touch-callout: none) {
+  .project-card,
+  #zoom-grid,
+  .panel {
+    -webkit-backface-visibility: hidden;
+    -webkit-transform-style: preserve-3d;
+  }
+} 

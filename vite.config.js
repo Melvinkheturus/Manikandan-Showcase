@@ -1,15 +1,14 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { visualizer } from 'rollup-plugin-visualizer'
-import { splitVendorChunkPlugin } from 'vite'
 import viteCompression from 'vite-plugin-compression'
 import { resolve } from 'path'
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: './',
   plugins: [
     react(),
-    splitVendorChunkPlugin(),
     viteCompression({
       algorithm: 'gzip',
       ext: '.gz',
@@ -27,7 +26,9 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': resolve(__dirname, 'src'),
+      'three': resolve(__dirname, 'node_modules/three'),
     },
+    dedupe: ['three', '@splinetool/runtime'],
   },
   build: {
     target: 'es2015',
@@ -38,24 +39,45 @@ export default defineConfig({
       compress: {
         drop_console: true,
         drop_debugger: true,
+        pure_funcs: ['console.log', 'console.info', 'console.debug'],
       },
     },
     rollupOptions: {
       output: {
-        manualChunks: {
-          supabase: ['@supabase/supabase-js'],
-          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-          'three-fiber': ['@react-three/fiber', '@react-three/drei', 'three'],
-          'animation-libs': ['framer-motion', 'gsap'],
-          vendors: ['react-icons', 'react-intersection-observer', 'react-scroll-parallax'],
-        },
+        manualChunks: (id) => {
+          if (id.includes('node_modules')) {
+            if (id.includes('@supabase/supabase-js') || id.includes('@supabase/postgrest-js')) {
+              return 'supabase';
+            }
+            if (id.includes('react') || id.includes('react-dom') || id.includes('react-router-dom')) {
+              return 'react-vendor';
+            }
+            if (id.includes('three') || id.includes('@react-three') || id.includes('@splinetool')) {
+              return 'three-fiber';
+            }
+            if (id.includes('framer-motion') || id.includes('gsap')) {
+              return 'animation-libs';
+            }
+            if (id.includes('react-icons') || id.includes('react-intersection-observer') || id.includes('react-scroll-parallax')) {
+              return 'vendors';
+            }
+            return 'vendor'; // all other third-party dependencies
+          }
+        }
       },
     },
     chunkSizeWarningLimit: 1000,
   },
   optimizeDeps: {
-    include: ['@supabase/supabase-js', '@supabase/postgrest-js', 'react', 'react-dom', 'react-router-dom', 'three'],
-    exclude: ['@supabase/supabase-js'],
+    include: [
+      '@supabase/supabase-js', 
+      '@supabase/postgrest-js', 
+      'react', 
+      'react-dom', 
+      'react-router-dom', 
+      'three',
+      '@splinetool/runtime'
+    ],
     esbuildOptions: {
       platform: 'browser',
       mainFields: ['module', 'main'],
