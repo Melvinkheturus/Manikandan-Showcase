@@ -1,5 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+
+// Fix for Framer Motion SSR issue - must be before any Framer Motion imports
+if (typeof window === 'undefined') {
+  React.useLayoutEffect = React.useEffect;
+}
+
 import Router from './router.jsx';
 import { ThemeProvider } from './context/ThemeContext.jsx';
 import { Analytics } from '@vercel/analytics/react';
@@ -18,22 +24,25 @@ import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
-// Create root
-const root = ReactDOM.createRoot(document.getElementById('root'));
+// SSR safety check - only create root when in browser
+if (typeof document !== 'undefined') {
+  // Create root
+  const root = ReactDOM.createRoot(document.getElementById('root'));
 
-// Render app
-root.render(
-  <React.StrictMode>
-      <ThemeProvider>
-      <Router />
-        <Analytics />
-        <SpeedInsights />
-      </ThemeProvider>
-  </React.StrictMode>
-);
+  // Render app
+  root.render(
+    <React.StrictMode>
+        <ThemeProvider>
+        <Router />
+          <Analytics />
+          <SpeedInsights />
+        </ThemeProvider>
+    </React.StrictMode>
+  );
+}
 
 // Add performance monitoring in development
-if (import.meta.env.DEV) {
+if (import.meta.env.DEV && typeof window !== 'undefined') {
   // Import and start the performance monitoring
   import('web-vitals').then((vitals) => {
     const vitalsObj = {
