@@ -3,25 +3,25 @@ import { Link } from 'react-router-dom';
 import { motion, AnimatePresence, useScroll, useTransform, useSpring } from 'framer-motion';
 import SectionWrapper from '../portfolio/components/layout/SectionWrapper';
 
+// SSR compatibility - prevent useLayoutEffect warnings
+const isBrowser = typeof window !== 'undefined';
+
 // Enhanced stacked project showcase with glassmorphism, scroll pinning, and cursor glow
 const ProjectShowcaseSection = () => {
   const sectionRef = useRef(null);
   const containerRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
+  const [cursorPosition, setCursorPosition] = useState({ x: 50, y: 50 });
   const [hoveredCard, setHoveredCard] = useState(null);
   
-  // Scroll progress tracking for pin effect
-  const { scrollYProgress } = useScroll({
+  // Scroll progress tracking for pin effect - only run in browser
+  const { scrollYProgress } = useScroll(isBrowser ? {
     target: sectionRef,
     offset: ["start start", "end end"]
-  });
+  } : {});
   
-  // Scroll progress smoothing
-  const smoothProgress = useSpring(scrollYProgress, { damping: 20, stiffness: 100 });
-  
-  // Transforms for section pinning
-  const yProgress = useTransform(smoothProgress, [0, 1], [0, 1]);
+  // Scroll progress smoothing with fallback for SSR
+  const smoothProgress = isBrowser ? useSpring(scrollYProgress, { damping: 20, stiffness: 100 }) : { onChange: () => {}, get: () => 0 };
   
   // Mock data for featured projects
   const featuredProjects = [
@@ -60,8 +60,10 @@ const ProjectShowcaseSection = () => {
     }
   ];
   
-  // Update active index based on scroll position
+  // Update active index based on scroll position - with SSR guard
   useEffect(() => {
+    if (!isBrowser) return;
+    
     const unsubscribe = smoothProgress.onChange(value => {
       // Map scroll progress to project index
       const totalProjects = featuredProjects.length;
@@ -79,7 +81,7 @@ const ProjectShowcaseSection = () => {
     });
     
     return () => unsubscribe();
-  }, [smoothProgress, activeIndex]);
+  }, [smoothProgress, activeIndex, featuredProjects.length]);
 
   // Handle cursor movement for glow effect
   const handleMouseMove = (e, index) => {
@@ -164,6 +166,8 @@ const ProjectShowcaseSection = () => {
           key={index}
           className={`w-3 h-3 rounded-full cursor-pointer relative ${index === activeIndex ? 'bg-primary' : 'bg-white/30'}`}
           onClick={() => {
+            if (!isBrowser || !sectionRef.current) return;
+            
             // Calculate the scroll position based on the index
             const scrollPerCard = 1 / featuredProjects.length;
             const scrollTarget = scrollPerCard * index;
